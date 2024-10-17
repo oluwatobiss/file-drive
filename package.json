@@ -1,5 +1,5 @@
 {
-  "name": "files-drive",
+  "name": "file-drive",
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {

@@ -1,0 +1,127 @@
+@import url("https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Dots:wght@400..700&display=swap");
+
+html {
+  font-family: "helvetica neue", helvetica, arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  background-color: #17181c;
+  color: #fff;
+}
+
+main {
+  box-sizing: border-box;
+  margin: 0 auto;
+  width: 47vw;
+  min-height: 100vh;
+  background-color: #333;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.sticky-container {
+  background-color: rgba(51, 51, 51, 0.8);
+  backdrop-filter: blur(7px);
+  position: sticky;
+  top: 0;
+}
+
+nav {
+  padding-block: 13px 33px;
+  padding-inline: 31px;
+  border-bottom: 1px solid rgb(113, 118, 123);
+  text-align: center;
+  user-select: none;
+}
+
+.registration-pages-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 29px 31px;
+}
+
+.logo {
+  margin-bottom: 7px;
+  font-family: "Edu AU VIC WA NT Dots", cursive;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 2rem;
+}
+
+.nav-btns-container {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+}
+
+nav a {
+  text-decoration: none;
+  font-size: 0.97rem;
+  font-weight: bold;
+  padding: 6px 24px;
+  border-radius: 25px;
+}
+
+.log-in-btn,
+.log-out-btn,
+.join-club-btn {
+  border: 1px solid #42bb67;
+  color: #42bb67;
+}
+
+.sign-up-btn,
+.new-post-btn {
+  border: 1px solid #42bb67;
+  background-color: #42bb67;
+  color: #333;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 50% repeat(2, 1fr) 10%;
+  align-items: center;
+  border-bottom: 1px solid rgb(113, 118, 123);
+  padding: 17px 31px;
+  line-height: 20px;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.head.row {
+  font-weight: 600;
+}
+
+.name-cell,
+.delshare-cell {
+  display: flex;
+  gap: 10px;
+}
+
+.delshare-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3px;
+  border-radius: 25px;
+  border: 1px solid rgb(113, 118, 123);
+  background-color: transparent;
+  color: rgb(113, 118, 123);
+  cursor: pointer;
+}
+
+.row__del-btn:hover {
+  border: 1px solid #e25851;
+  color: #e25851;
+}
+
+.row__share-btn:hover {
+  border: 1px solid #51cae2;
+  color: #51cae2;
+}
+
+.error-list {
+  color: #e25851;
+}

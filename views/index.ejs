@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/index.css" />
+  <title><%= appName %></title>
+</head>
+
+<body>
+  <main>
+    <div class="sticky-container">
+      <nav>
+        <div class="logo"><%= appName %></div>
+        <div class="nav-btns-container">
+          <a href="/new-folder" class="log-in-btn">New folder</a>
+          <a href="/upload-file" class="sign-up-btn">Upload file</a>
+          <a href="/log-out" class="log-out-btn">Log out</a>
+        </div>
+      </nav>
+      <div class="head row">
+        <span>Name</span>
+        <span>Modified</span>
+        <span>File size</span>
+        <span></span>
+      </div>
+    </div>
+    <article>
+      <div class="folder row">
+        <span class="name-cell">
+          <span>📁</span>
+          <span>Folder name</span>
+        </span>
+        <span>2024-10-20</span>
+        <span>59.7 GB</span>
+        <span class="delshare-cell">
+          <a class="delshare-btn row__del-btn" href="#" title="Delete">🗑️</a>
+          <a class="delshare-btn row__share-btn" href="#" title="Share">🌐</a>
+        </span>
+      </div>
+      <div class="file row">
+        <span class="name-cell">
+          <span>📄</span>
+          <span>Filename</span>
+        </span>
+        <span>2024-10-17</span>
+        <span>7.83 KB</span>
+        <span class="delshare-cell">
+          <a class="delshare-btn row__del-btn" href="#" title="Delete">🗑️</a>
+          <a class="delshare-btn row__share-btn" href="#" title="Share">🌐</a>
+        </span>
+      </div>
+    </article>
+  </main>
+</body>
+
+</html>
