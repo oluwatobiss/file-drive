@@ -6,4 +6,8 @@ function showSignUpView(req, res) {
   res.render("sign-up");
 }
 
-module.exports = { showHomepage, showSignUpView };
+function showLoginView(req, res) {
+  res.render("log-in");
+}
+
+module.exports = { showHomepage, showSignUpView, showLoginView };
