@@ -123,3 +123,55 @@ nav a {
 .error-list {
   color: #e25851;
 }
+
+.create-folder-modal {
+  /* display: flex; */
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.37);
+}
+
+.create-folder-modal form {
+  padding: 0 24px 24px;
+  border-radius: 5px;
+  width: 30vw;
+  background-color: #333;
+}
+
+.create-folder-modal h2 {
+  font-weight: lighter;
+}
+
+.create-folder-modal input {
+  box-sizing: border-box;
+  display: inline-block;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  margin-block: 8px;
+  padding: 12px 20px;
+  width: 100%;
+  font-size: 1.1rem;
+}
+
+.create-folder-modal button {
+  display: inline-block;
+  border: none;
+  border-radius: 25px;
+  margin-top: 8px;
+  padding: 14px 20px;
+  font-size: 1.1rem;
+  color: #42bb67;
+  border: 1px solid #42bb67;
+  background-color: #333;
+  cursor: pointer;
+}
+
+.create-folder-modal button:hover {
+  color: #333;
+  background-color: rgba(66, 187, 103, 0.3);
+}
