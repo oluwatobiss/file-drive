@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("node:path");
+const indexRouter = require("./routes/index");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -12,8 +13,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (req, res) => res.render("index"));
-
+app.use("/", indexRouter);
 app.use((err, req, res, next) => {
   const userData = req.user;
   err &&

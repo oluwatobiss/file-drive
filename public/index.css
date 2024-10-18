@@ -35,9 +35,6 @@ nav {
 }
 
 .registration-pages-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   padding: 29px 31px;
 }
 
@@ -48,6 +45,7 @@ nav {
   font-weight: 700;
   font-style: normal;
   font-size: 2rem;
+  color: #fff;
 }
 
 .nav-btns-container {
@@ -66,13 +64,13 @@ nav a {
 
 .log-in-btn,
 .log-out-btn,
-.join-club-btn {
+.new-folder-btn {
   border: 1px solid #42bb67;
   color: #42bb67;
 }
 
 .sign-up-btn,
-.new-post-btn {
+.upload-btn {
   border: 1px solid #42bb67;
   background-color: #42bb67;
   color: #333;
