@@ -16,7 +16,10 @@
         <div class="nav-btns-container">
           <a href="/log-out" class="log-out-btn">Log out</a>
           <a href="/new-folder" class="new-folder-btn">New folder</a>
-          <a href="/upload-file" class="upload-btn">Upload file</a>
+          <form action="/save-file" method="post" enctype="multipart/form-data">
+            <label class="upload-btn" for="file-input">Upload file</label>
+            <input type="file" id="file-input" name="user-file" onchange="form.submit()">
+          </form>
         </div>
       </nav>
       <div class="head row">

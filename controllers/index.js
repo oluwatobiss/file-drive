@@ -10,4 +10,15 @@ function showLoginView(req, res) {
   res.render("log-in");
 }
 
-module.exports = { showHomepage, showSignUpView, showLoginView };
+function saveUploadedFile(req, res) {
+  console.log("===================");
+  console.log("File Saved!");
+  return res.redirect("/");
+}
+
+module.exports = {
+  showHomepage,
+  showSignUpView,
+  showLoginView,
+  saveUploadedFile,
+};

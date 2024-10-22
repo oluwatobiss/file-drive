@@ -54,12 +54,17 @@ nav {
   gap: 7px;
 }
 
-nav a {
+nav a,
+.upload-btn {
   text-decoration: none;
   font-size: 0.97rem;
   font-weight: bold;
   padding: 6px 24px;
   border-radius: 25px;
+}
+
+nav form {
+  display: flex;
 }
 
 .log-in-btn,
@@ -74,6 +79,12 @@ nav a {
   border: 1px solid #42bb67;
   background-color: #42bb67;
   color: #333;
+  cursor: pointer;
+}
+
+#file-input {
+  opacity: 0;
+  width: 0;
 }
 
 .row {
