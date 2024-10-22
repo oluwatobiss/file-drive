@@ -13,6 +13,7 @@ function showLoginView(req, res) {
 function saveUploadedFile(req, res) {
   console.log("===================");
   console.log("File Saved!");
+  console.log(req.file);
   return res.redirect("/");
 }
 
