@@ -89,7 +89,7 @@ nav form {
 
 .row {
   display: grid;
-  grid-template-columns: 50% repeat(2, 1fr) 10%;
+  grid-template-columns: 40% repeat(2, 1fr) 20%;
   align-items: center;
   border-bottom: 1px solid rgb(113, 118, 123);
   padding: 17px 31px;
@@ -124,6 +124,11 @@ nav form {
 .row__del-btn:hover {
   border: 1px solid #e25851;
   color: #e25851;
+}
+
+.row__download-btn:hover {
+  border: 1px solid #51e288;
+  color: #51e288;
 }
 
 .row__share-btn:hover {

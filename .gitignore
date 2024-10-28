@@ -134,3 +134,6 @@ dist
 
 # draw.io backup files
 *.drawio.bkp
+
+# Uploaded files
+uploads/
