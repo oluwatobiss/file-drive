@@ -1,6 +1,10 @@
+const dotenv = require("dotenv");
+const dotenvExpand = require("dotenv-expand");
 const express = require("express");
 const path = require("node:path");
 const indexRouter = require("./routes/index");
+
+dotenvExpand.expand(dotenv.config());
 
 const app = express();
 const port = process.env.PORT || 3000;
