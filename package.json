@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@prisma/client": "^5.21.0",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "dotenv-expand": "^11.0.6",
@@ -23,6 +24,6 @@
     "pg": "^8.13.0"
   },
   "devDependencies": {
-    "prisma": "^5.21.0"
+    "prisma": "^5.21.1"
   }
 }
