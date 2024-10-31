@@ -16,7 +16,7 @@
         <div class="logo"><%= appName %></div>
         <div class="nav-btns-container">
           <a href="/log-out" class="log-out-btn">Log out</a>
-          <span class="new-folder-btn" onclick="handleNewFolderBtnClick()">New folder</span>
+          <span class="new-folder-btn" onclick="openCreateFolderModal(true)">New folder</span>
           <form action="/save-file" method="post" enctype="multipart/form-data">
             <label class="upload-btn" for="file-input">Upload file</label>
             <input type="file" id="file-input" name="user-file" onchange="form.submit()">
@@ -64,6 +64,7 @@
       <input type="text" name="folderName" placeholder="Enter folder name" required>
       <button type="submit">Create</button>
     </form>
+    <button type="button" title="Close" onclick="openCreateFolderModal(false)">X</button>
   </article>
 </body>
 

@@ -1,4 +1,6 @@
-function handleNewFolderBtnClick() {
+function openCreateFolderModal(popup) {
   const createFolderModal = document.getElementById("create-folder-modal");
-  createFolderModal.style.display = "flex";
+  popup
+    ? (createFolderModal.style.display = "flex")
+    : (createFolderModal.style.display = "");
 }
