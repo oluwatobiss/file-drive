@@ -54,7 +54,8 @@ nav {
   gap: 7px;
 }
 
-nav a,
+.log-out-btn,
+.new-folder-btn,
 .upload-btn {
   text-decoration: none;
   font-size: 0.97rem;
@@ -72,6 +73,7 @@ nav form {
 .new-folder-btn {
   border: 1px solid #42bb67;
   color: #42bb67;
+  cursor: pointer;
 }
 
 .sign-up-btn,
@@ -140,8 +142,7 @@ nav form {
   color: #e25851;
 }
 
-.create-folder-modal {
-  /* display: flex; */
+#create-folder-modal {
   display: none;
   justify-content: center;
   align-items: center;
@@ -152,18 +153,18 @@ nav form {
   background-color: rgba(0, 0, 0, 0.37);
 }
 
-.create-folder-modal form {
+#create-folder-modal form {
   padding: 0 24px 24px;
   border-radius: 5px;
   width: 30vw;
   background-color: #333;
 }
 
-.create-folder-modal h2 {
+#create-folder-modal h2 {
   font-weight: lighter;
 }
 
-.create-folder-modal input {
+#create-folder-modal input {
   box-sizing: border-box;
   display: inline-block;
   border: 1px solid #fff;
@@ -174,7 +175,7 @@ nav form {
   font-size: 1.1rem;
 }
 
-.create-folder-modal button {
+#create-folder-modal button {
   display: inline-block;
   border: none;
   border-radius: 25px;
@@ -187,7 +188,7 @@ nav form {
   cursor: pointer;
 }
 
-.create-folder-modal button:hover {
+#create-folder-modal button:hover {
   color: #333;
   background-color: rgba(66, 187, 103, 0.3);
 }
