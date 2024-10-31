@@ -17,9 +17,16 @@ function saveUploadedFile(req, res) {
   return res.redirect("/");
 }
 
+function createFolder(req, res) {
+  console.log("=== create folder ====");
+  console.log(req.body);
+  return res.redirect("/");
+}
+
 module.exports = {
   showHomepage,
   showSignUpView,
   showLoginView,
   saveUploadedFile,
+  createFolder,
 };

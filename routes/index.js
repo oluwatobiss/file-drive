@@ -13,5 +13,6 @@ router.post(
   upload.single("user-file"),
   controller.saveUploadedFile
 );
+router.post("/create-folder", controller.createFolder);
 
 module.exports = router;
