@@ -1,4 +1,12 @@
-function showHomepage(req, res) {
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+
+async function showHomepage(req, res) {
+  const allFolders = await prisma.folder.findMany();
+  console.log("=== showHomepage ===");
+
+  console.log(allFolders);
+
   res.render("index");
 }
 
@@ -17,10 +25,18 @@ function saveUploadedFile(req, res) {
   return res.redirect("/");
 }
 
-function createFolder(req, res) {
+async function createFolder(req, res) {
   console.log("=== create folder ====");
   console.log(req.body);
-  return res.redirect("/");
+  try {
+    await prisma.folder.create({ data: { name: req.body.folderName } });
+    await prisma.$disconnect();
+    return res.redirect("/");
+  } catch (e) {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  }
 }
 
 module.exports = {
