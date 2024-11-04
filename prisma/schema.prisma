@@ -19,3 +19,10 @@ model Folder {
   updatedAt DateTime @updatedAt
   name String @unique
 }
+
+model File {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  fileData Json
+}
