@@ -2,12 +2,12 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function showHomepage(req, res) {
-  const allFolders = await prisma.folder.findMany();
-  console.log("=== showHomepage ===");
+  const folders = await prisma.folder.findMany();
+  const files = await prisma.file.findMany();
 
-  console.log(allFolders);
+  console.log(files);
 
-  res.render("index", { folders: allFolders });
+  res.render("index", { folders, files });
 }
 
 function showSignUpView(req, res) {
