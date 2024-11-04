@@ -56,7 +56,7 @@
           <span><%= file.fileData.originalname %></span>
         </span>
         <span><%= file.updatedAt.toLocaleDateString() %></span>
-        <span><%= file.fileData.size %></span>
+        <span><%= byteSize(file.fileData.size) %></span>
         <span class="delshare-cell">
           <span class="row-options-btn" onclick="openRowOptionsModal(event)">⋯</span>
           <div class="row-options-modal">

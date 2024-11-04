@@ -1,3 +1,4 @@
+const byteSize = require("byte-size");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
@@ -7,7 +8,7 @@ async function showHomepage(req, res) {
 
   console.log(files);
 
-  res.render("index", { folders, files });
+  res.render("index", { folders, files, byteSize });
 }
 
 function showSignUpView(req, res) {
