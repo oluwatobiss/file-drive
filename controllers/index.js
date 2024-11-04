@@ -18,11 +18,19 @@ function showLoginView(req, res) {
   res.render("log-in");
 }
 
-function saveUploadedFile(req, res) {
+async function saveUploadedFile(req, res) {
   console.log("===================");
   console.log("File Saved!");
   console.log(req.file);
-  return res.redirect("/");
+  try {
+    await prisma.file.create({ data: { fileData: req.file } });
+    await prisma.$disconnect();
+    return res.redirect("/");
+  } catch (e) {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  }
 }
 
 async function createFolder(req, res) {
