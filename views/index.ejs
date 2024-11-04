@@ -31,12 +31,13 @@
       </div>
     </div>
     <article>
+      <% folders.forEach(folder => { %>
       <div class="folder row">
         <span class="name-cell">
           <span>📁</span>
-          <span>Folder name</span>
+          <span><%= folder.name %></span>
         </span>
-        <span>2024-10-20</span>
+        <span><%= folder.updatedAt.toLocaleDateString() %></span>
         <span>—</span>
         <span class="delshare-cell">
           <span class="row-options-btn" onclick="openRowOptionsModal(event)">⋯</span>
@@ -47,6 +48,7 @@
           </div>
         </span>
       </div>
+      <% }); %>
       <div class="file row">
         <span class="name-cell">
           <span>📄</span>

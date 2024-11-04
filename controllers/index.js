@@ -7,7 +7,7 @@ async function showHomepage(req, res) {
 
   console.log(allFolders);
 
-  res.render("index");
+  res.render("index", { folders: allFolders });
 }
 
 function showSignUpView(req, res) {
