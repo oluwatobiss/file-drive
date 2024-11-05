@@ -11,6 +11,10 @@ async function showHomepage(req, res) {
   res.render("index", { folders, files, byteSize });
 }
 
+function showFolderView(req, res) {
+  res.render("folder", { folderName: req.query.f, file: [] });
+}
+
 function showSignUpView(req, res) {
   res.render("sign-up");
 }
@@ -50,6 +54,7 @@ async function createFolder(req, res) {
 
 module.exports = {
   showHomepage,
+  showFolderView,
   showSignUpView,
   showLoginView,
   saveUploadedFile,

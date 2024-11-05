@@ -52,7 +52,26 @@ nav {
 .nav-btns-container {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 7px;
+}
+
+.breadcrumb {
+  margin-inline: 10px;
+  font-size: 0.97rem;
+}
+
+.nav-btns-container a {
+  text-decoration: none;
+  color: #fff;
+}
+
+.nav-btns-container a:hover {
+  text-decoration: underline;
+}
+
+.arrow-spacer {
+  margin-inline: 10px;
 }
 
 .log-out-btn,
@@ -107,9 +126,18 @@ nav form {
 }
 
 .name-cell,
-.delshare-cell {
+.options-cell {
   display: flex;
   gap: 10px;
+}
+
+.name-cell a {
+  text-decoration: none;
+  color: #fff;
+}
+
+.name-cell a:hover {
+  text-decoration: underline;
 }
 
 .row-options-btn {

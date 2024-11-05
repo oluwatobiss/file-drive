@@ -35,11 +35,13 @@
       <div class="folder row">
         <span class="name-cell">
           <span>📁</span>
-          <span><%= folder.name %></span>
+          <a href="/folder/?f=<%= folder.name %>">
+            <span><%= folder.name %></span>
+          </a>
         </span>
         <span><%= folder.updatedAt.toLocaleDateString() %></span>
         <span>—</span>
-        <span class="delshare-cell">
+        <span class="options-cell">
           <span class="row-options-btn" onclick="openRowOptionsModal(event)">⋯</span>
           <div class="row-options-modal">
             <div>Delete</div>
@@ -57,7 +59,7 @@
         </span>
         <span><%= file.updatedAt.toLocaleDateString() %></span>
         <span><%= byteSize(file.fileData.size) %></span>
-        <span class="delshare-cell">
+        <span class="options-cell">
           <span class="row-options-btn" onclick="openRowOptionsModal(event)">⋯</span>
           <div class="row-options-modal">
             <div>Delete</div>
