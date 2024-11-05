@@ -61,12 +61,12 @@ nav {
   font-size: 0.97rem;
 }
 
-.nav-btns-container a {
+.breadcrumb a {
   text-decoration: none;
   color: #fff;
 }
 
-.nav-btns-container a:hover {
+.breadcrumb a:hover {
   text-decoration: underline;
 }
 

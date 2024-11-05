@@ -6,13 +6,13 @@ async function showHomepage(req, res) {
   const folders = await prisma.folder.findMany();
   const files = await prisma.file.findMany();
 
-  console.log(files);
+  // console.log(files);
 
   res.render("index", { folders, files, byteSize });
 }
 
 function showFolderView(req, res) {
-  res.render("folder", { folderName: req.query.f, file: [] });
+  res.render("folder", { folderName: req.query.f, files: [] });
 }
 
 function showSignUpView(req, res) {
@@ -26,9 +26,14 @@ function showLoginView(req, res) {
 async function saveUploadedFile(req, res) {
   console.log("===================");
   console.log("File Saved!");
-  console.log(req.file);
+
+  // console.log(req.file);
   try {
-    await prisma.file.create({ data: { fileData: req.file } });
+    const fileData = await prisma.file.create({ data: { fileData: req.file } });
+    console.log("=== Directory ===");
+    console.log(req.query.dir);
+    console.log("=== File Data ===");
+    console.log(fileData);
     await prisma.$disconnect();
     return res.redirect("/");
   } catch (e) {

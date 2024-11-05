@@ -17,7 +17,7 @@
         <div class="nav-btns-container">
           <a href="/log-out" class="log-out-btn">Log out</a>
           <span class="breadcrumb"><a href="/">My Drive</a><span class="arrow-spacer">⟩</span><span><%= folderName %></span></span>
-          <form action="/save-file" method="post" enctype="multipart/form-data">
+          <form action="/save-file/?dir=<%= folderName %>" method="post" enctype="multipart/form-data">
             <label class="upload-btn" for="file-input">Upload file</label>
             <input type="file" id="file-input" name="user-file" onchange="form.submit()">
           </form>
@@ -31,7 +31,26 @@
       </div>
     </div>
     <article>
-
+      <% if (files.length) { %>
+      <% files.forEach(file => { %>
+      <div class="file row">
+        <span class="name-cell">
+          <span>📄</span>
+          <span><%= file.fileData.originalname %></span>
+        </span>
+        <span><%= file.updatedAt.toLocaleDateString() %></span>
+        <span><%= byteSize(file.fileData.size) %></span>
+        <span class="options-cell">
+          <span class="row-options-btn" onclick="openRowOptionsModal(event)">⋯</span>
+          <div class="row-options-modal">
+            <div>Delete</div>
+            <div>Share</div>
+            <div>Rename</div>
+          </div>
+        </span>
+      </div>
+      <% }); %>
+      <% } %>
     </article>
   </main>
 </body>
