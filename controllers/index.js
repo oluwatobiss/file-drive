@@ -8,39 +8,22 @@ async function showHomepage(req, res) {
     where: { name: "root" },
   });
   let files = [];
-
-  // console.log("=== showHomepage folderData ===");
-
-  // console.log(folderData);
-
   if (folderData) {
     files = await prisma.file.findMany({
       where: { folderId: folderData.id },
     });
   }
-
-  console.log("=== showHomepage files ===");
-  console.log(files);
-
   res.render("index", { folders, files, byteSize });
 }
 
 async function showFolderView(req, res) {
-  console.log("=== folder ===");
   const folderName = req.query.f;
-  console.log(folderName);
   const folderData = await prisma.folder.findUnique({
     where: { name: folderName },
   });
-
-  console.log(folderData);
-
   const files = await prisma.file.findMany({
     where: { folderId: folderData.id },
   });
-
-  // console.log(files);
-
   res.render("folder", { folderName, files, byteSize });
 }
 
@@ -53,15 +36,8 @@ function showLoginView(req, res) {
 }
 
 async function saveUploadedFile(req, res) {
-  console.log("===================");
-  console.log("File Saved!");
-
-  // console.log(req.file);
   try {
     const folderName = req.query.f;
-    console.log("=== Directory ===");
-    console.log(folderName);
-
     await prisma.folder.upsert({
       where: { name: folderName },
       create: {
@@ -83,8 +59,6 @@ async function saveUploadedFile(req, res) {
 }
 
 async function createFolder(req, res) {
-  console.log("=== create folder ====");
-  console.log(req.body);
   try {
     await prisma.folder.create({ data: { name: req.body.folderName } });
     await prisma.$disconnect();
