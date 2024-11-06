@@ -14,7 +14,7 @@ CREATE TABLE "File" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "fileData" JSONB NOT NULL,
-    "folderId" INTEGER,
+    "folderId" INTEGER NOT NULL,
 
     CONSTRAINT "File_pkey" PRIMARY KEY ("id")
 );
@@ -23,4 +23,4 @@ CREATE TABLE "File" (
 CREATE UNIQUE INDEX "Folder_name_key" ON "Folder"("name");
 
 -- AddForeignKey
-ALTER TABLE "File" ADD CONSTRAINT "File_folderId_fkey" FOREIGN KEY ("folderId") REFERENCES "Folder"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "File" ADD CONSTRAINT "File_folderId_fkey" FOREIGN KEY ("folderId") REFERENCES "Folder"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

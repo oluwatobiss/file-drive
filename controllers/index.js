@@ -4,22 +4,44 @@ const prisma = new PrismaClient();
 
 async function showHomepage(req, res) {
   const folders = await prisma.folder.findMany();
-  const files = await prisma.file.findMany();
+  const folderData = await prisma.folder.findUnique({
+    where: { name: "root" },
+  });
+  let files = [];
 
-  // console.log(files);
+  // console.log("=== showHomepage folderData ===");
+
+  // console.log(folderData);
+
+  if (folderData) {
+    files = await prisma.file.findMany({
+      where: { folderId: folderData.id },
+    });
+  }
+
+  console.log("=== showHomepage files ===");
+  console.log(files);
 
   res.render("index", { folders, files, byteSize });
 }
 
 async function showFolderView(req, res) {
   console.log("=== folder ===");
-  const folder = req.query.f;
-  console.log(folder);
+  const folderName = req.query.f;
+  console.log(folderName);
   const folderData = await prisma.folder.findUnique({
-    where: { name: folder },
+    where: { name: folderName },
   });
-  const files = await prisma.file.findMany();
-  res.render("folder", { folderName: folder, files });
+
+  console.log(folderData);
+
+  const files = await prisma.file.findMany({
+    where: { folderId: folderData.id },
+  });
+
+  // console.log(files);
+
+  res.render("folder", { folderName, files, byteSize });
 }
 
 function showSignUpView(req, res) {
@@ -36,33 +58,23 @@ async function saveUploadedFile(req, res) {
 
   // console.log(req.file);
   try {
-    const folder = req.query.f;
+    const folderName = req.query.f;
     console.log("=== Directory ===");
-    console.log(folder);
+    console.log(folderName);
 
-    const folderData = await prisma.folder.findUnique({
-      where: { name: folder },
+    await prisma.folder.upsert({
+      where: { name: folderName },
+      create: {
+        name: folderName,
+        file: { create: { fileData: req.file } },
+      },
+      update: { file: { create: { fileData: req.file } } },
     });
 
-    console.log(folderData);
-
-    if (folderData) {
-      await prisma.file.create({ data: { fileData: req.file } });
-    }
-
-    if (!folderData) {
-      await prisma.file.create({
-        data: {
-          fileData: req.file,
-          folder: { create: { name: folder } },
-        },
-      });
-    }
-
     await prisma.$disconnect();
-    return folder === "root"
+    return folderName === "root"
       ? res.redirect("/")
-      : res.redirect(`/folder/?f=${folder}`);
+      : res.redirect(`/folder/?f=${folderName}`);
   } catch (e) {
     console.error(e);
     await prisma.$disconnect();
