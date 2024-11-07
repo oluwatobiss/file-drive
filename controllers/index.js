@@ -25,7 +25,7 @@ async function showHomepage(req, res) {
 
 async function showFolderView(req, res) {
   try {
-    const folderName = req.query.f;
+    const folderName = req.params.folderName;
     const folderData = await prisma.folder.findUnique({
       where: { name: folderName },
     });
@@ -51,7 +51,7 @@ function showLoginView(req, res) {
 
 async function saveUploadedFile(req, res) {
   try {
-    const folderName = req.query.f;
+    const folderName = req.params.folderName;
     await prisma.folder.upsert({
       where: { name: folderName },
       create: {
@@ -64,7 +64,7 @@ async function saveUploadedFile(req, res) {
     await prisma.$disconnect();
     return folderName === "root"
       ? res.redirect("/")
-      : res.redirect(`/folder/?f=${folderName}`);
+      : res.redirect(`/folder/${folderName}`);
   } catch (e) {
     console.error(e);
     await prisma.$disconnect();
@@ -87,7 +87,7 @@ async function createFolder(req, res) {
 async function renameFolder(req, res) {
   try {
     await prisma.folder.update({
-      where: { name: req.query.f },
+      where: { name: req.params.folderName },
       data: { name: req.body.folderName },
     });
     await prisma.$disconnect();

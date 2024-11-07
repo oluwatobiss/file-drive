@@ -17,7 +17,7 @@
         <div class="nav-btns-container">
           <a href="/log-out" class="log-out-btn">Log out</a>
           <span class="new-folder-btn" onclick="openCreateFolderModal(true)">New folder</span>
-          <form action="/save-file/?f=root" method="post" enctype="multipart/form-data">
+          <form action="/save-file/root" method="post" enctype="multipart/form-data">
             <label class="upload-btn" for="file-input">Upload file</label>
             <input type="file" id="file-input" name="user-file" onchange="form.submit()">
           </form>
@@ -37,7 +37,7 @@
       <div class="folder row">
         <span class="name-cell">
           <span>📁</span>
-          <a href="/folder/?f=<%= folder.name %>">
+          <a href="/folder/<%= folder.name %>">
             <span><%= folder.name %></span>
           </a>
         </span>
@@ -46,13 +46,17 @@
         <span class="options-cell">
           <span class="row-options-btn" onclick="openRowOptionsModal(event)">⋯</span>
           <div class="row-options-modal">
-            <div>Delete</div>
+            <div>
+              <form action="/delete/<%= folder.name %>" method="POST" style="display:inline;">
+                <button class="folder__delete-btn" type="submit" title="Delete" onclick="return confirm('Are you sure you want to delete this folder and its content?');">Delete</button>
+              </form>
+            </div>
             <div>Share</div>
             <div onclick="openRenameFolderModal(event, true)">Rename</div>
           </div>
         </span>
         <article class="rename-folder-modal">
-          <form action="/rename-folder/?f=<%= folder.name %>" method="post">
+          <form action="/rename-folder/<%= folder.name %>" method="post">
             <h2>Rename folder</h2>
             <input type="text" name="folderName" placeholder="Enter folder name" required>
             <button type="submit">Rename</button>

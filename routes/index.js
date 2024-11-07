@@ -6,15 +6,15 @@ const upload = multer({ dest: "uploads/" });
 const router = Router();
 
 router.get("/", controller.showHomepage);
-router.get("/folder", controller.showFolderView);
+router.get("/folder/:folderName", controller.showFolderView);
 router.get("/sign-up", controller.showSignUpView);
 router.get("/log-in", controller.showLoginView);
 router.post(
-  "/save-file",
+  "/save-file/:folderName",
   upload.single("user-file"),
   controller.saveUploadedFile
 );
 router.post("/create-folder", controller.createFolder);
-router.post("/rename-folder", controller.renameFolder);
+router.post("/rename-folder/:folderName", controller.renameFolder);
 
 module.exports = router;

@@ -17,7 +17,7 @@
         <div class="nav-btns-container">
           <a href="/log-out" class="log-out-btn">Log out</a>
           <span class="breadcrumb"><a href="/">My Drive</a><span class="arrow-spacer">⟩</span><span><%= folderName %></span></span>
-          <form action="/save-file/?f=<%= folderName %>" method="post" enctype="multipart/form-data">
+          <form action="/save-file/<%= folderName %>" method="post" enctype="multipart/form-data">
             <label class="upload-btn" for="file-input">Upload file</label>
             <input type="file" id="file-input" name="user-file" onchange="form.submit()">
           </form>
