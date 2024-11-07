@@ -166,7 +166,7 @@ nav form {
   cursor: pointer;
 }
 
-.folder__delete-btn {
+.delete-btn {
   border: none;
   padding: 0;
   background-color: transparent;

@@ -108,10 +108,20 @@ async function deleteFolder(req, res) {
     const deleteFiles = prisma.file.deleteMany({
       where: { folderId: folderData.id },
     });
-    const deleteFolder = prisma.folder.delete({
-      where: { name: folderName },
-    });
-    const transaction = await prisma.$transaction([deleteFiles, deleteFolder]);
+    const deleteFolder = prisma.folder.delete({ where: { name: folderName } });
+    await prisma.$transaction([deleteFiles, deleteFolder]);
+    await prisma.$disconnect();
+    return res.redirect("/");
+  } catch (e) {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  }
+}
+
+async function deleteFile(req, res) {
+  try {
+    await prisma.file.delete({ where: { id: Number(req.params.fileId) } });
     await prisma.$disconnect();
     return res.redirect("/");
   } catch (e) {
@@ -130,4 +140,5 @@ module.exports = {
   createFolder,
   renameFolder,
   deleteFolder,
+  deleteFile,
 };
