@@ -121,9 +121,12 @@ async function deleteFolder(req, res) {
 
 async function deleteFile(req, res) {
   try {
+    const folderName = req.params.folderName;
     await prisma.file.delete({ where: { id: Number(req.params.fileId) } });
     await prisma.$disconnect();
-    return res.redirect("/");
+    return folderName === "root"
+      ? res.redirect("/")
+      : res.redirect(`/folder/${folderName}`);
   } catch (e) {
     console.error(e);
     await prisma.$disconnect();

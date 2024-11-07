@@ -80,7 +80,7 @@
           <span class="row-options-btn" onclick="openRowOptionsModal(event)">⋯</span>
           <div class="row-options-modal">
             <div>
-              <form action="/delete-file/<%= file.id %>" method="POST" style="display:inline;">
+              <form action="/delete-file/<%= file.id %>/root" method="POST" style="display:inline;">
                 <button class="delete-btn" type="submit" title="Delete" onclick="return confirm('Are you sure you want to delete this file?');">Delete</button>
               </form>
             </div>
