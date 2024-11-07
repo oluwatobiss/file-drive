@@ -99,6 +99,28 @@ async function renameFolder(req, res) {
   }
 }
 
+async function deleteFolder(req, res) {
+  try {
+    const folderName = req.params.folderName;
+    const folderData = await prisma.folder.findUnique({
+      where: { name: folderName },
+    });
+    const deleteFiles = prisma.file.deleteMany({
+      where: { folderId: folderData.id },
+    });
+    const deleteFolder = prisma.folder.delete({
+      where: { name: folderName },
+    });
+    const transaction = await prisma.$transaction([deleteFiles, deleteFolder]);
+    await prisma.$disconnect();
+    return res.redirect("/");
+  } catch (e) {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  }
+}
+
 module.exports = {
   showHomepage,
   showFolderView,
@@ -107,4 +129,5 @@ module.exports = {
   saveUploadedFile,
   createFolder,
   renameFolder,
+  deleteFolder,
 };

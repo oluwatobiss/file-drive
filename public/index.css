@@ -166,39 +166,16 @@ nav form {
   cursor: pointer;
 }
 
-.show-row-options-modal {
-  display: inline;
-}
-
-.delshare-btn {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  padding: 3px;
-  border-radius: 25px;
-  border: 1px solid rgb(113, 118, 123);
+.folder__delete-btn {
+  border: none;
+  padding: 0;
   background-color: transparent;
-  color: rgb(113, 118, 123);
+  color: #fff;
   cursor: pointer;
 }
 
-.row__del-btn:hover {
-  border: 1px solid #e25851;
-  color: #e25851;
-}
-
-.row__download-btn:hover {
-  border: 1px solid #51e288;
-  color: #51e288;
-}
-
-.row__share-btn:hover {
-  border: 1px solid #51cae2;
-  color: #51cae2;
-}
-
-.error-list {
-  color: #e25851;
+.show-row-options-modal {
+  display: inline;
 }
 
 #create-folder-modal,
