@@ -5,8 +5,10 @@ function openCreateFolderModal(popup) {
     : (createFolderModal.style.display = "");
 }
 
-function openRenameFolderModal(popup) {
-  const renameFolderModal = document.getElementById("rename-folder-modal");
+function openRenameFolderModal(event, popup) {
+  const renameFolderModal = event.currentTarget
+    .closest(".folder")
+    .querySelector(".rename-folder-modal");
   popup
     ? (renameFolderModal.style.display = "flex")
     : (renameFolderModal.style.display = "");

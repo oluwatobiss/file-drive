@@ -48,9 +48,17 @@
           <div class="row-options-modal">
             <div>Delete</div>
             <div>Share</div>
-            <div onclick="openRenameFolderModal(true)">Rename</div>
+            <div onclick="openRenameFolderModal(event, true)">Rename</div>
           </div>
         </span>
+        <article class="rename-folder-modal">
+          <form action="/rename-folder/?f=<%= folder.name %>" method="post">
+            <h2>Rename folder</h2>
+            <input type="text" name="folderName" placeholder="Enter folder name" required>
+            <button type="submit">Rename</button>
+          </form>
+          <button type="button" title="Close" onclick="openRenameFolderModal(event, false)">X</button>
+        </article>
       </div>
       <%  } %>
       <% }); %>
@@ -83,14 +91,6 @@
       <button type="submit">Create</button>
     </form>
     <button type="button" title="Close" onclick="openCreateFolderModal(false)">X</button>
-  </article>
-  <article id="rename-folder-modal">
-    <form action="/rename-folder" method="post">
-      <h2>Rename folder</h2>
-      <input type="text" name="folderName" placeholder="Enter folder name" required>
-      <button type="submit">Rename</button>
-    </form>
-    <button type="button" title="Close" onclick="openRenameFolderModal(false)">X</button>
   </article>
 </body>
 

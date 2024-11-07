@@ -3,28 +3,42 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function showHomepage(req, res) {
-  const folders = await prisma.folder.findMany();
-  const folderData = await prisma.folder.findUnique({
-    where: { name: "root" },
-  });
-  let files = [];
-  if (folderData) {
-    files = await prisma.file.findMany({
-      where: { folderId: folderData.id },
+  try {
+    const folders = await prisma.folder.findMany();
+    const folderData = await prisma.folder.findUnique({
+      where: { name: "root" },
     });
+    let files = [];
+    if (folderData) {
+      files = await prisma.file.findMany({
+        where: { folderId: folderData.id },
+      });
+    }
+    await prisma.$disconnect();
+    res.render("index", { folders, files, byteSize });
+  } catch (e) {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
   }
-  res.render("index", { folders, files, byteSize });
 }
 
 async function showFolderView(req, res) {
-  const folderName = req.query.f;
-  const folderData = await prisma.folder.findUnique({
-    where: { name: folderName },
-  });
-  const files = await prisma.file.findMany({
-    where: { folderId: folderData.id },
-  });
-  res.render("folder", { folderName, files, byteSize });
+  try {
+    const folderName = req.query.f;
+    const folderData = await prisma.folder.findUnique({
+      where: { name: folderName },
+    });
+    const files = await prisma.file.findMany({
+      where: { folderId: folderData.id },
+    });
+    await prisma.$disconnect();
+    res.render("folder", { folderName, files, byteSize });
+  } catch (e) {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  }
 }
 
 function showSignUpView(req, res) {
@@ -70,6 +84,21 @@ async function createFolder(req, res) {
   }
 }
 
+async function renameFolder(req, res) {
+  try {
+    await prisma.folder.update({
+      where: { name: req.query.f },
+      data: { name: req.body.folderName },
+    });
+    await prisma.$disconnect();
+    return res.redirect("/");
+  } catch (e) {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  }
+}
+
 module.exports = {
   showHomepage,
   showFolderView,
@@ -77,4 +106,5 @@ module.exports = {
   showLoginView,
   saveUploadedFile,
   createFolder,
+  renameFolder,
 };

@@ -15,5 +15,6 @@ router.post(
   controller.saveUploadedFile
 );
 router.post("/create-folder", controller.createFolder);
+router.post("/rename-folder", controller.renameFolder);
 
 module.exports = router;
