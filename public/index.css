@@ -166,6 +166,11 @@ nav form {
   cursor: pointer;
 }
 
+.row-options-modal a {
+  text-decoration: none;
+  color: #fff;
+}
+
 .delete-btn {
   border: none;
   padding: 0;

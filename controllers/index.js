@@ -134,6 +134,20 @@ async function deleteFile(req, res) {
   }
 }
 
+async function downloadFile(req, res) {
+  try {
+    const fileInfo = await prisma.file.findUnique({
+      where: { id: Number(req.params.fileId) },
+    });
+    await prisma.$disconnect();
+    res.download(fileInfo.fileData.path, fileInfo.fileData.originalname);
+  } catch (e) {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  }
+}
+
 module.exports = {
   showHomepage,
   showFolderView,
@@ -144,4 +158,5 @@ module.exports = {
   renameFolder,
   deleteFolder,
   deleteFile,
+  downloadFile,
 };
