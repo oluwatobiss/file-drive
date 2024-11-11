@@ -47,6 +47,7 @@ nav {
   font-style: normal;
   font-size: 2rem;
   color: #fff;
+  text-decoration: none;
 }
 
 .nav-btns-container {
@@ -54,6 +55,15 @@ nav {
   justify-content: center;
   align-items: center;
   gap: 7px;
+}
+
+.unauth-user-intro {
+  padding-top: 100px;
+  text-align: center;
+}
+
+.unauth-user-intro div {
+  color: rgb(113, 118, 123);
 }
 
 .breadcrumb {
@@ -74,9 +84,7 @@ nav {
   margin-inline: 10px;
 }
 
-.log-out-btn,
-.new-folder-btn,
-.upload-btn {
+.nav-btn {
   text-decoration: none;
   font-size: 0.97rem;
   font-weight: bold;

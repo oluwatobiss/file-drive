@@ -1,21 +1,29 @@
+const bcrypt = require("bcryptjs");
 const byteSize = require("byte-size");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function showHomepage(req, res) {
   try {
-    const folders = await prisma.folder.findMany();
-    const folderData = await prisma.folder.findUnique({
-      where: { name: "root" },
-    });
+    console.log("=== showHomepage ===");
+    const userData = req.user;
+    console.log(userData);
+    const folders = userData ? await prisma.folder.findMany() : [];
+    const folderData =
+      userData &&
+      (await prisma.folder.findUnique({
+        where: { name: "root" },
+      }));
     let files = [];
-    if (folderData) {
-      files = await prisma.file.findMany({
+    folderData &&
+      (files = await prisma.file.findMany({
         where: { folderId: folderData.id },
-      });
-    }
+      }));
+
+    console.log(folders);
+
     await prisma.$disconnect();
-    res.render("index", { folders, files, byteSize });
+    res.render("index", { folders, files, byteSize, userData });
   } catch (e) {
     console.error(e);
     await prisma.$disconnect();
@@ -44,6 +52,35 @@ async function showFolderView(req, res) {
 function showSignUpView(req, res) {
   res.render("sign-up");
 }
+
+const signUpUser = [
+  async (req, res, next) => {
+    const { firstName, lastName, email, password } = req.body;
+    bcrypt.hash(password, 10, async (err, hashedPassword) => {
+      if (err) return next(err);
+      try {
+        const userData = await prisma.user.upsert({
+          where: { email },
+          create: { firstName, lastName, email, password: hashedPassword },
+          update: { firstName, lastName, email, password: hashedPassword },
+        });
+        await prisma.$disconnect();
+        const user = { id: userData.id };
+        console.log("=== signUpUser ===");
+        console.log(user);
+
+        req.login(user, function (err) {
+          if (err) return next(err);
+          return res.redirect("/");
+        });
+      } catch (e) {
+        console.error(e);
+        await prisma.$disconnect();
+        process.exit(1);
+      }
+    });
+  },
+];
 
 function showLoginView(req, res) {
   res.render("log-in");
@@ -152,6 +189,7 @@ module.exports = {
   showHomepage,
   showFolderView,
   showSignUpView,
+  signUpUser,
   showLoginView,
   saveUploadedFile,
   createFolder,

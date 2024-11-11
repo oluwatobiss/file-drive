@@ -13,12 +13,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        Int      @id @default(autoincrement())
+  firstName String
+  lastName  String
+  email     String   @unique
+  password  String
+  File      File[]
+  Folder    Folder[]
+}
+
 model Folder {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String   @unique
   file      File[]
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
 }
 
 model File {
@@ -26,6 +38,8 @@ model File {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   fileData  Json
-  folder    Folder?   @relation(fields: [folderId], references: [id])
+  folder    Folder?  @relation(fields: [folderId], references: [id])
   folderId  Int?
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
 }

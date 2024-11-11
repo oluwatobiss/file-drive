@@ -15,22 +15,37 @@
       <nav>
         <div class="logo"><%= appName %></div>
         <div class="nav-btns-container">
-          <a href="/log-out" class="log-out-btn">Log out</a>
-          <span class="new-folder-btn" onclick="openCreateFolderModal(true)">New folder</span>
+          <% if (!userData) { %>
+          <a href="/log-in" class="nav-btn log-in-btn">Log in</a>
+          <a href="/sign-up" class="nav-btn sign-up-btn">Sign up</a>
+          <% } %>
+          <% if (userData) { %>
+          <a href="/log-out" class="nav-btn log-out-btn">Log out</a>
+          <span class="nav-btn new-folder-btn" onclick="openCreateFolderModal(true)">New folder</span>
           <form action="/save-file/root" method="post" enctype="multipart/form-data">
-            <label class="upload-btn" for="file-input">Upload file</label>
+            <label class="nav-btn upload-btn" for="file-input">Upload file</label>
             <input type="file" id="file-input" name="user-file" onchange="form.submit()">
           </form>
+          <% } %>
         </div>
       </nav>
+      <% if (userData) { %>
       <div class="head row">
         <span>Name</span>
         <span>Modified</span>
         <span>File size</span>
         <span></span>
       </div>
+      <% } %>
     </div>
     <article>
+      <% if (!userData) { %>
+      <article class="unauth-user-intro">
+        <h1>Store and access files remotely</h1>
+        <div>The only drive you need to manage your files online.</div>
+      </article>
+      <% } %>
+      <% if (userData) { %>
       <% if (folders.length) { %>
       <% folders.forEach(folder => { %>
       <% if (folder.name !== "root") { %>
@@ -92,6 +107,7 @@
         </span>
       </div>
       <% }); %>
+      <% } %>
       <% } %>
     </article>
   </main>
