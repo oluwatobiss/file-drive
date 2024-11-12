@@ -122,40 +122,6 @@ async function saveUploadedFile(req, res) {
   }
 }
 
-// async function saveUploadedFile(req, res) {
-//   try {
-//     const folderName = req.params.folderName;
-//     await prisma.folder.upsert({
-//       where: { name: folderName },
-//       create: {
-//         name: folderName,
-//         file: { create: { fileData: req.file } },
-//       },
-//       update: { file: { create: { fileData: req.file } } },
-//     });
-//     await prisma.$disconnect();
-//     return folderName === "root"
-//       ? res.redirect("/")
-//       : res.redirect(`/folder/${folderName}`);
-//   } catch (e) {
-//     console.error(e);
-//     await prisma.$disconnect();
-//     process.exit(1);
-//   }
-// }
-
-// async function createFolder(req, res) {
-//   try {
-//     await prisma.folder.create({ data: { name: req.body.folderName } });
-//     await prisma.$disconnect();
-//     return res.redirect("/");
-//   } catch (e) {
-//     console.error(e);
-//     await prisma.$disconnect();
-//     process.exit(1);
-//   }
-// }
-
 async function upsertFolder(req, res) {
   try {
     console.log("=== upsertFolder ===");
@@ -175,10 +141,6 @@ async function upsertFolder(req, res) {
         },
       },
     });
-    // await prisma.folder.update({
-    //   where: { name: req.params.folderName },
-    //   data: { name: req.body.folderName },
-    // });
     await prisma.$disconnect();
     return res.redirect("/");
   } catch (e) {
@@ -246,6 +208,13 @@ async function downloadFile(req, res) {
   }
 }
 
+function logUserOut(req, res, next) {
+  req.logout((err) => {
+    if (err) return next(err);
+    res.redirect("/");
+  });
+}
+
 module.exports = {
   showHomepage,
   showFolderView,
@@ -253,9 +222,9 @@ module.exports = {
   signUpUser,
   showLoginView,
   saveUploadedFile,
-  // createFolder,
   upsertFolder,
   deleteFolder,
   deleteFile,
   downloadFile,
+  logUserOut,
 };
