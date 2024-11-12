@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const byteSize = require("byte-size");
-const { unlink } = require("fs").promises;
+const { mkdir, rename, rm, unlink } = require("fs").promises;
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
@@ -127,22 +127,40 @@ async function upsertFolder(req, res) {
   try {
     console.log("=== upsertFolder ===");
     const userData = req.user;
+    const existingName = req.params.folderName;
+    const newName = req.body.folderName;
+    const folderName = existingName || newName;
+
     console.log(userData);
-    const folderName = req.params.folderName || req.body.folderName;
     console.log(folderName);
+
     await prisma.user.update({
       where: { id: userData.id },
       data: {
         folders: {
           upsert: {
             where: { nameUserId: { name: folderName, userId: userData.id } },
-            create: { name: req.body.folderName },
-            update: { name: req.body.folderName },
+            create: { name: newName },
+            update: { name: newName },
           },
         },
       },
     });
     await prisma.$disconnect();
+
+    console.log("=== upsertFolder existing / new name ===");
+    console.log(existingName);
+    console.log(newName);
+
+    !existingName && (await mkdir(`uploads/${newName}`, { recursive: true }));
+
+    existingName &&
+      (await rename(`uploads/${folderName}`, `uploads/${newName}`, {
+        recursive: true,
+      }));
+
+    console.log(`Renamed uploads/${folderName} to uploads/${newName}`);
+
     return res.redirect("/");
   } catch (e) {
     console.error(e);
@@ -172,6 +190,7 @@ async function deleteFolder(req, res) {
     });
 
     await prisma.$disconnect();
+    await rm(`uploads/${folderName}`, { recursive: true, force: true });
     return res.redirect("/");
   } catch (e) {
     console.error(e);
@@ -186,6 +205,9 @@ async function deleteFile(req, res) {
     const fileInfo = await prisma.file.findUnique({
       where: { id: Number(req.params.fileId) },
     });
+    console.log("=== Delete file ===");
+    console.log(fileInfo);
+
     await prisma.file.delete({ where: { id: Number(req.params.fileId) } });
     await prisma.$disconnect();
     await unlink(fileInfo.fileData.path);
