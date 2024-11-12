@@ -60,8 +60,8 @@ router.post(
   upload.single("user-file"),
   controller.saveUploadedFile
 );
-router.post("/create-folder", controller.createFolder);
-router.post("/rename/:folderName", controller.renameFolder);
+router.post("/create-folder", controller.upsertFolder);
+router.post("/rename/:folderName", controller.upsertFolder);
 router.post("/delete-folder/:folderName", controller.deleteFolder);
 router.post("/delete-file/:fileId/:folderName", controller.deleteFile);
 router.get("/download/:fileId", controller.downloadFile);
