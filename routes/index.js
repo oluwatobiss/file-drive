@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const { PrismaClient } = require("@prisma/client");
-// const { mkdirSync } = require("fs");
+const { mkdirSync } = require("fs");
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
@@ -11,16 +11,8 @@ const router = Router();
 const prisma = new PrismaClient();
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    console.log("=== multer.diskStorage ===");
-    console.log(req.params);
-
     const path = `uploads/${req.params.folderName}`;
-    console.log(path);
-
-    // mkdirSync(path, { recursive: true }, (err) => {
-    //   if (err) throw err;
-    // });
-
+    mkdirSync(path, { recursive: true });
     cb(null, path);
   },
 });

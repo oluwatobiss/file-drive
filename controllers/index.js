@@ -6,13 +6,10 @@ const prisma = new PrismaClient();
 
 async function showHomepage(req, res) {
   try {
-    console.log("=== showHomepage ===");
     const userData = req.user;
-    console.log(userData);
     const folders = userData
       ? await prisma.folder.findMany({ where: { userId: userData.id } })
       : [];
-    console.log(folders);
     const folderData =
       userData &&
       (await prisma.folder.findUnique({
@@ -23,7 +20,6 @@ async function showHomepage(req, res) {
       (files = await prisma.file.findMany({
         where: { folderId: folderData.id },
       }));
-
     await prisma.$disconnect();
     res.render("index", { folders, files, byteSize, userData });
   } catch (e) {
@@ -35,9 +31,7 @@ async function showHomepage(req, res) {
 
 async function showFolderView(req, res) {
   try {
-    console.log("=== showFolderView ===");
     const userData = req.user;
-    console.log(userData);
     const folderName = req.params.folderName;
     const folderData = await prisma.folder.findUnique({
       where: { nameUserId: { name: folderName, userId: userData.id } },
@@ -71,9 +65,6 @@ const signUpUser = [
         });
         await prisma.$disconnect();
         const user = { id: userData.id };
-        console.log("=== signUpUser ===");
-        console.log(user);
-
         req.login(user, function (err) {
           if (err) return next(err);
           return res.redirect("/");
@@ -93,9 +84,7 @@ function showLoginView(req, res) {
 
 async function saveUploadedFile(req, res) {
   try {
-    console.log("=== saveUploadedFile ===");
     const userData = req.user;
-    console.log(userData);
     const folderName = req.params.folderName;
     await prisma.user.update({
       where: { id: userData.id },
@@ -105,9 +94,15 @@ async function saveUploadedFile(req, res) {
             where: { nameUserId: { name: folderName, userId: userData.id } },
             create: {
               name: folderName,
-              files: { create: { fileData: req.file } },
+              files: {
+                create: { location: req.file.destination, fileData: req.file },
+              },
             },
-            update: { files: { create: { fileData: req.file } } },
+            update: {
+              files: {
+                create: { location: req.file.destination, fileData: req.file },
+              },
+            },
           },
         },
       },
@@ -125,15 +120,10 @@ async function saveUploadedFile(req, res) {
 
 async function upsertFolder(req, res) {
   try {
-    console.log("=== upsertFolder ===");
     const userData = req.user;
     const existingName = req.params.folderName;
     const newName = req.body.folderName;
     const folderName = existingName || newName;
-
-    console.log(userData);
-    console.log(folderName);
-
     await prisma.user.update({
       where: { id: userData.id },
       data: {
@@ -146,21 +136,27 @@ async function upsertFolder(req, res) {
         },
       },
     });
-    await prisma.$disconnect();
-
-    console.log("=== upsertFolder existing / new name ===");
-    console.log(existingName);
-    console.log(newName);
-
     !existingName && (await mkdir(`uploads/${newName}`, { recursive: true }));
-
-    existingName &&
-      (await rename(`uploads/${folderName}`, `uploads/${newName}`, {
+    if (existingName) {
+      await rename(`uploads/${existingName}`, `uploads/${newName}`, {
         recursive: true,
-      }));
-
-    console.log(`Renamed uploads/${folderName} to uploads/${newName}`);
-
+      });
+      await prisma.folder.update({
+        where: { nameUserId: { name: newName, userId: userData.id } },
+        data: {
+          files: {
+            updateMany: {
+              where: { location: `uploads/${existingName}` },
+              data: { location: `uploads/${newName}` },
+            },
+          },
+        },
+        include: {
+          files: true,
+        },
+      });
+    }
+    await prisma.$disconnect();
     return res.redirect("/");
   } catch (e) {
     console.error(e);
@@ -171,24 +167,18 @@ async function upsertFolder(req, res) {
 
 async function deleteFolder(req, res) {
   try {
-    console.log("=== deleteFolder ===");
     const userData = req.user;
-    console.log(userData);
     const folderName = req.params.folderName;
     const folderData = await prisma.folder.findUnique({
       where: { nameUserId: { name: folderName, userId: userData.id } },
     });
-    console.log(folderData);
-
     await prisma.file.deleteMany({
       where: { folderId: folderData.id },
     });
-
     await prisma.user.update({
       where: { id: userData.id },
       data: { folders: { delete: [{ id: folderData.id }] } },
     });
-
     await prisma.$disconnect();
     await rm(`uploads/${folderName}`, { recursive: true, force: true });
     return res.redirect("/");
@@ -205,12 +195,9 @@ async function deleteFile(req, res) {
     const fileInfo = await prisma.file.findUnique({
       where: { id: Number(req.params.fileId) },
     });
-    console.log("=== Delete file ===");
-    console.log(fileInfo);
-
     await prisma.file.delete({ where: { id: Number(req.params.fileId) } });
     await prisma.$disconnect();
-    await unlink(fileInfo.fileData.path);
+    await unlink(`${fileInfo.location}/${fileInfo.fileData.filename}`);
     return folderName === "root"
       ? res.redirect("/")
       : res.redirect(`/folder/${folderName}`);
@@ -227,7 +214,10 @@ async function downloadFile(req, res) {
       where: { id: Number(req.params.fileId) },
     });
     await prisma.$disconnect();
-    res.download(fileInfo.fileData.path, fileInfo.fileData.originalname);
+    res.download(
+      `${fileInfo.location}/${fileInfo.fileData.filename}`,
+      fileInfo.fileData.originalname
+    );
   } catch (e) {
     console.error(e);
     await prisma.$disconnect();

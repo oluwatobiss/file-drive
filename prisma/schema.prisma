@@ -19,7 +19,7 @@ model User {
   lastName  String
   email     String   @unique
   password  String
-  folders    Folder[]
+  folders   Folder[]
 }
 
 model Folder {
@@ -38,6 +38,7 @@ model File {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  location  String
   fileData  Json
   folder    Folder?  @relation(fields: [folderId], references: [id])
   folderId  Int?
