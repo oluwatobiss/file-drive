@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const byteSize = require("byte-size");
+const { unlink } = require("fs").promises;
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
@@ -182,8 +183,12 @@ async function deleteFolder(req, res) {
 async function deleteFile(req, res) {
   try {
     const folderName = req.params.folderName;
+    const fileInfo = await prisma.file.findUnique({
+      where: { id: Number(req.params.fileId) },
+    });
     await prisma.file.delete({ where: { id: Number(req.params.fileId) } });
     await prisma.$disconnect();
+    await unlink(fileInfo.fileData.path);
     return folderName === "root"
       ? res.redirect("/")
       : res.redirect(`/folder/${folderName}`);
