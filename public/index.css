@@ -248,3 +248,7 @@ nav form {
   color: #333;
   background-color: rgba(66, 187, 103, 0.3);
 }
+
+.error-list {
+  color: #e25851;
+}

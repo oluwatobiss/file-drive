@@ -14,13 +14,20 @@
     <%- include("partials/nav-registration-pages") %>
     <article>
       <h1>Sign up</h1>
+      <% if (locals.errors) {%>
+      <ul class="error-list">
+        <% errors.forEach(function(error) { %>
+        <li><%= error.msg %></li>
+        <% }) %>
+      </ul>
+      <% } %>
       <form action="/sign-up" method="post">
         <label for="firstName">First name</label>
-        <input type="text" name="firstName" id="firstName" required>
+        <input type="text" name="firstName" id="firstName" value="<%= errInputs.firstName %>" required>
         <label for="lastName">Last name</label>
-        <input type="text" name="lastName" id="lastName" required>
+        <input type="text" name="lastName" id="lastName" value="<%= errInputs.lastName %>" required>
         <label for="email">Email</label>
-        <input type="email" name="email" id="email" required>
+        <input type="email" name="email" id="email" value="<%= errInputs.email %>" required>
         <label for="password">Password</label>
         <input type="password" name="password" id="password" required>
         <button type="submit">Sign up</button>

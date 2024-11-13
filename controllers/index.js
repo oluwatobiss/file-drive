@@ -1,5 +1,7 @@
 const bcrypt = require("bcryptjs");
 const byteSize = require("byte-size");
+const validate = require("./validators");
+const { validationResult } = require("express-validator");
 const { mkdir, rename, rm, unlink } = require("fs").promises;
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
@@ -49,12 +51,22 @@ async function showFolderView(req, res) {
 }
 
 function showSignUpView(req, res) {
-  res.render("sign-up");
+  res.render("sign-up", {
+    errInputs: { firstName: "", lastName: "", username: "" },
+  });
 }
 
 const signUpUser = [
+  validate.signUp,
   async (req, res, next) => {
     const { firstName, lastName, email, password } = req.body;
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      return res.status(400).render("sign-up", {
+        errors: result.array(),
+        errInputs: { firstName, lastName, email },
+      });
+    }
     bcrypt.hash(password, 10, async (err, hashedPassword) => {
       if (err) return next(err);
       try {
@@ -79,7 +91,7 @@ const signUpUser = [
 ];
 
 function showLoginView(req, res) {
-  res.render("log-in");
+  res.render("log-in", { errMsg: req.session.messages });
 }
 
 async function saveUploadedFile(req, res) {
