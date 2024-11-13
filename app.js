@@ -6,9 +6,16 @@ const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const { PrismaClient } = require("@prisma/client");
 const passport = require("passport");
 const path = require("node:path");
+const cloudinary = require("cloudinary").v2;
 const indexRouter = require("./routes/index");
 
 dotenvExpand.expand(dotenv.config());
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const app = express();
 const port = process.env.PORT || 3000;

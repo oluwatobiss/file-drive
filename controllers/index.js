@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const byteSize = require("byte-size");
+const cloudinary = require("cloudinary").v2;
 const validate = require("./validators");
 const { validationResult } = require("express-validator");
 const { mkdir, rename, rm, unlink } = require("fs").promises;
@@ -96,6 +97,9 @@ function showLoginView(req, res) {
 
 async function saveUploadedFile(req, res) {
   try {
+    console.log("=== saveUploadedFile ===");
+    console.log(req.file);
+
     const userData = req.user;
     const folderName = req.params.folderName;
     await prisma.user.update({
@@ -120,6 +124,19 @@ async function saveUploadedFile(req, res) {
       },
     });
     await prisma.$disconnect();
+    const filePath = `${req.file.destination}/${req.file.filename}`;
+    const cloudinaryOptions = {
+      folder: req.file.destination,
+      use_filename: true,
+      unique_filename: false,
+      overwrite: true,
+      resource_type: "auto",
+    };
+    const uploadResult = await cloudinary.uploader.upload(
+      filePath,
+      cloudinaryOptions
+    );
+    console.log(uploadResult);
     return folderName === "root"
       ? res.redirect("/")
       : res.redirect(`/folder/${folderName}`);
