@@ -11,6 +11,7 @@
   "description": "",
   "dependencies": {
     "@prisma/client": "^5.22.0",
+    "@quixo3/prisma-session-store": "^3.1.13",
     "bcryptjs": "^2.4.3",
     "byte-size": "^9.0.0",
     "dotenv": "^16.4.5",
