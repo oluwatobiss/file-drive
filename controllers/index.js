@@ -222,8 +222,7 @@ async function deleteFolder(req, res) {
     await prisma.$disconnect();
     await rm(`uploads/${folderName}`, { recursive: true, force: true });
     const emptyImageResult = await cloudinary.api.delete_resources_by_prefix(
-      `uploads/${folderName}/`,
-      { resource_type: "image" }
+      `uploads/${folderName}/`
     );
     console.log(emptyImageResult);
     const emptyVideoResult = await cloudinary.api.delete_resources_by_prefix(
@@ -250,6 +249,7 @@ async function deleteFolder(req, res) {
 
 async function deleteFile(req, res) {
   try {
+    console.log("=== deleteFile ===");
     const folderName = req.params.folderName;
     const fileInfo = await prisma.file.findUnique({
       where: { id: Number(req.params.fileId) },
@@ -257,6 +257,22 @@ async function deleteFile(req, res) {
     await prisma.file.delete({ where: { id: Number(req.params.fileId) } });
     await prisma.$disconnect();
     await unlink(`${fileInfo.location}/${fileInfo.fileData.filename}`);
+
+    const emptyImageResult = await cloudinary.uploader.destroy(
+      `${fileInfo.location}/${fileInfo.fileData.filename}`
+    );
+    console.log(emptyImageResult);
+    const emptyVideoResult = await cloudinary.uploader.destroy(
+      `${fileInfo.location}/${fileInfo.fileData.filename}`,
+      { resource_type: "video" }
+    );
+    console.log(emptyVideoResult);
+    const emptyRawResult = await cloudinary.uploader.destroy(
+      `${fileInfo.location}/${fileInfo.fileData.filename}`,
+      { resource_type: "raw" }
+    );
+    console.log(emptyRawResult);
+
     return folderName === "root"
       ? res.redirect("/")
       : res.redirect(`/folder/${folderName}`);
