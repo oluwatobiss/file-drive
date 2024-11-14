@@ -151,6 +151,7 @@ async function saveUploadedFile(req, res) {
 
 async function upsertFolder(req, res) {
   try {
+    console.log("=== upsertFolder ===");
     const userData = req.user;
     const existingName = req.params.folderName;
     const newName = req.body.folderName;
@@ -176,6 +177,11 @@ async function upsertFolder(req, res) {
       console.log(folderResult);
     }
     if (existingName) {
+      const renameFolderResult = await cloudinary.api.rename_folder(
+        `uploads/${existingName}`,
+        `uploads/${newName}`
+      );
+      console.log(renameFolderResult);
       await rename(`uploads/${existingName}`, `uploads/${newName}`, {
         recursive: true,
       });
