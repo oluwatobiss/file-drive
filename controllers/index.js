@@ -4,7 +4,6 @@ const cloudinary = require("cloudinary").v2;
 const validate = require("./validators");
 const { validationResult } = require("express-validator");
 const { rm } = require("fs").promises;
-// const { mkdir, rename, rm, unlink } = require("fs").promises;
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
@@ -108,7 +107,7 @@ async function saveUploadedFile(req, res) {
 
     const cloudinaryOptions = {
       folder: req.file.destination,
-      use_filename: true,
+      public_id: req.file.originalname,
       unique_filename: false,
       overwrite: true,
       resource_type: "auto",
@@ -161,7 +160,6 @@ async function upsertFolder(req, res) {
     const newName = req.body.folderName;
     const folderName = existingName || newName;
     if (!existingName) {
-      // await mkdir(`uploads/${newName}`, { recursive: true });
       const folderResult = await cloudinary.api.create_folder(
         `uploads/${newName}`
       );
@@ -185,9 +183,6 @@ async function upsertFolder(req, res) {
         `uploads/${newName}`
       );
       console.log(renameFolderResult);
-      // await rename(`uploads/${existingName}`, `uploads/${newName}`, {
-      //   recursive: true,
-      // });
       await prisma.folder.update({
         where: { nameUserId: { name: newName, userId: userData.id } },
         data: {
@@ -244,7 +239,6 @@ async function deleteFolder(req, res) {
       data: { folders: { delete: [{ id: folderData.id }] } },
     });
     await prisma.$disconnect();
-    // await rm(`uploads/${folderName}`, { recursive: true, force: true });
     return res.redirect("/");
   } catch (e) {
     console.error(e);
@@ -276,7 +270,6 @@ async function deleteFile(req, res) {
     console.log(emptyRawResult);
     await prisma.file.delete({ where: { id: Number(req.params.fileId) } });
     await prisma.$disconnect();
-    // await unlink(`${fileInfo.location}/${fileInfo.fileData.filename}`);
     return folderName === "root"
       ? res.redirect("/")
       : res.redirect(`/folder/${folderName}`);
