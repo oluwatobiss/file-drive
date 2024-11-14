@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/index.css" />
+  <link rel="stylesheet" href="/error.css" />
+  <title><%= appName %></title>
+</head>
+
+<body>
+  <main>
+    <nav>
+      <div class="logo"><%= appName %></div>
+      <div class="nav-btns-container">
+        <a href="/log-out" class="nav-btn log-out-btn">Log out</a>
+      </div>
+    </nav>
+    <article>
+      <h1>Oops! There was an error</h1>
+      <p>Please check your URL again.</p>
+      <hr>
+      <p class="error-text"><%= error %></p>
+    </article>
+  </main>
+</body>
+
+</html>
