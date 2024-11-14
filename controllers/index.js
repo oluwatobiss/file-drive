@@ -97,11 +97,27 @@ function showLoginView(req, res) {
 
 async function saveUploadedFile(req, res) {
   try {
-    console.log("=== saveUploadedFile ===");
-    console.log(req.file);
-
     const userData = req.user;
     const folderName = req.params.folderName;
+    const filePath = `${req.file.destination}/${req.file.filename}`;
+
+    console.log("=== saveUploadedFile ===");
+    console.log(req.file);
+    console.log(filePath);
+
+    const cloudinaryOptions = {
+      folder: req.file.destination,
+      use_filename: true,
+      unique_filename: false,
+      overwrite: true,
+      resource_type: "auto",
+    };
+    const uploadResult = await cloudinary.uploader.upload(
+      filePath,
+      cloudinaryOptions
+    );
+    console.log(uploadResult);
+
     await prisma.user.update({
       where: { id: userData.id },
       data: {
@@ -124,21 +140,6 @@ async function saveUploadedFile(req, res) {
       },
     });
     await prisma.$disconnect();
-    const filePath = `${req.file.destination}/${req.file.filename}`;
-    console.log(filePath);
-    const cloudinaryOptions = {
-      folder: req.file.destination,
-      use_filename: true,
-      unique_filename: false,
-      overwrite: true,
-      resource_type: "auto",
-    };
-    const uploadResult = await cloudinary.uploader.upload(
-      filePath,
-      cloudinaryOptions
-    );
-
-    console.log(uploadResult);
     return folderName === "root"
       ? res.redirect("/")
       : res.redirect(`/folder/${folderName}`);
@@ -156,6 +157,13 @@ async function upsertFolder(req, res) {
     const existingName = req.params.folderName;
     const newName = req.body.folderName;
     const folderName = existingName || newName;
+    if (!existingName) {
+      await mkdir(`uploads/${newName}`, { recursive: true });
+      const folderResult = await cloudinary.api.create_folder(
+        `uploads/${newName}`
+      );
+      console.log(folderResult);
+    }
     await prisma.user.update({
       where: { id: userData.id },
       data: {
@@ -168,14 +176,6 @@ async function upsertFolder(req, res) {
         },
       },
     });
-
-    if (!existingName) {
-      await mkdir(`uploads/${newName}`, { recursive: true });
-      const folderResult = await cloudinary.api.create_folder(
-        `uploads/${newName}`
-      );
-      console.log(folderResult);
-    }
     if (existingName) {
       const renameFolderResult = await cloudinary.api.rename_folder(
         `uploads/${existingName}`,
@@ -195,9 +195,7 @@ async function upsertFolder(req, res) {
             },
           },
         },
-        include: {
-          files: true,
-        },
+        include: { files: true },
       });
     }
     await prisma.$disconnect();
@@ -211,22 +209,12 @@ async function upsertFolder(req, res) {
 
 async function deleteFolder(req, res) {
   try {
-    console.log("=== deleteFolder ===");
-
     const userData = req.user;
     const folderName = req.params.folderName;
     const folderData = await prisma.folder.findUnique({
       where: { nameUserId: { name: folderName, userId: userData.id } },
     });
-    await prisma.file.deleteMany({
-      where: { folderId: folderData.id },
-    });
-    await prisma.user.update({
-      where: { id: userData.id },
-      data: { folders: { delete: [{ id: folderData.id }] } },
-    });
-    await prisma.$disconnect();
-    await rm(`uploads/${folderName}`, { recursive: true, force: true });
+    console.log("=== deleteFolder ===");
     const emptyImageResult = await cloudinary.api.delete_resources_by_prefix(
       `uploads/${folderName}/`
     );
@@ -245,6 +233,15 @@ async function deleteFolder(req, res) {
       `uploads/${folderName}`
     );
     console.log(deleteResult);
+    await prisma.file.deleteMany({
+      where: { folderId: folderData.id },
+    });
+    await prisma.user.update({
+      where: { id: userData.id },
+      data: { folders: { delete: [{ id: folderData.id }] } },
+    });
+    await prisma.$disconnect();
+    await rm(`uploads/${folderName}`, { recursive: true, force: true });
     return res.redirect("/");
   } catch (e) {
     console.error(e);
@@ -260,10 +257,6 @@ async function deleteFile(req, res) {
     const fileInfo = await prisma.file.findUnique({
       where: { id: Number(req.params.fileId) },
     });
-    await prisma.file.delete({ where: { id: Number(req.params.fileId) } });
-    await prisma.$disconnect();
-    await unlink(`${fileInfo.location}/${fileInfo.fileData.filename}`);
-
     const emptyImageResult = await cloudinary.uploader.destroy(
       `${fileInfo.location}/${fileInfo.fileData.filename}`
     );
@@ -278,7 +271,9 @@ async function deleteFile(req, res) {
       { resource_type: "raw" }
     );
     console.log(emptyRawResult);
-
+    await prisma.file.delete({ where: { id: Number(req.params.fileId) } });
+    await prisma.$disconnect();
+    await unlink(`${fileInfo.location}/${fileInfo.fileData.filename}`);
     return folderName === "root"
       ? res.redirect("/")
       : res.redirect(`/folder/${folderName}`);
