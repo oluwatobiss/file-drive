@@ -49,4 +49,6 @@ app.use((err, req, res, next) => {
   err && res.status(400).render("error", { error: `${err.message}` });
 });
 
-app.listen(port, () => console.log(`Server listening on port ${port}!`));
+app.listen(port, () =>
+  console.log(`Server listening for requests at port: ${port}!`)
+);
