@@ -125,6 +125,7 @@ async function saveUploadedFile(req, res) {
     });
     await prisma.$disconnect();
     const filePath = `${req.file.destination}/${req.file.filename}`;
+    console.log(filePath);
     const cloudinaryOptions = {
       folder: req.file.destination,
       use_filename: true,
@@ -136,6 +137,7 @@ async function saveUploadedFile(req, res) {
       filePath,
       cloudinaryOptions
     );
+
     console.log(uploadResult);
     return folderName === "root"
       ? res.redirect("/")
@@ -165,7 +167,14 @@ async function upsertFolder(req, res) {
         },
       },
     });
-    !existingName && (await mkdir(`uploads/${newName}`, { recursive: true }));
+
+    if (!existingName) {
+      await mkdir(`uploads/${newName}`, { recursive: true });
+      const folderResult = await cloudinary.api.create_folder(
+        `uploads/${newName}`
+      );
+      console.log(folderResult);
+    }
     if (existingName) {
       await rename(`uploads/${existingName}`, `uploads/${newName}`, {
         recursive: true,
@@ -196,6 +205,8 @@ async function upsertFolder(req, res) {
 
 async function deleteFolder(req, res) {
   try {
+    console.log("=== deleteFolder ===");
+
     const userData = req.user;
     const folderName = req.params.folderName;
     const folderData = await prisma.folder.findUnique({
@@ -210,6 +221,25 @@ async function deleteFolder(req, res) {
     });
     await prisma.$disconnect();
     await rm(`uploads/${folderName}`, { recursive: true, force: true });
+    const emptyImageResult = await cloudinary.api.delete_resources_by_prefix(
+      `uploads/${folderName}/`,
+      { resource_type: "image" }
+    );
+    console.log(emptyImageResult);
+    const emptyVideoResult = await cloudinary.api.delete_resources_by_prefix(
+      `uploads/${folderName}/`,
+      { resource_type: "video" }
+    );
+    console.log(emptyVideoResult);
+    const emptyRawResult = await cloudinary.api.delete_resources_by_prefix(
+      `uploads/${folderName}/`,
+      { resource_type: "raw" }
+    );
+    console.log(emptyRawResult);
+    const deleteResult = await cloudinary.api.delete_folder(
+      `uploads/${folderName}`
+    );
+    console.log(deleteResult);
     return res.redirect("/");
   } catch (e) {
     console.error(e);
