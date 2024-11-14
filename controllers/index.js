@@ -3,7 +3,8 @@ const byteSize = require("byte-size");
 const cloudinary = require("cloudinary").v2;
 const validate = require("./validators");
 const { validationResult } = require("express-validator");
-const { mkdir, rename, rm, unlink } = require("fs").promises;
+const { rm } = require("fs").promises;
+// const { mkdir, rename, rm, unlink } = require("fs").promises;
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
@@ -118,6 +119,8 @@ async function saveUploadedFile(req, res) {
     );
     console.log(uploadResult);
 
+    await rm(req.file.destination, { recursive: true, force: true });
+
     await prisma.user.update({
       where: { id: userData.id },
       data: {
@@ -158,7 +161,7 @@ async function upsertFolder(req, res) {
     const newName = req.body.folderName;
     const folderName = existingName || newName;
     if (!existingName) {
-      await mkdir(`uploads/${newName}`, { recursive: true });
+      // await mkdir(`uploads/${newName}`, { recursive: true });
       const folderResult = await cloudinary.api.create_folder(
         `uploads/${newName}`
       );
@@ -182,9 +185,9 @@ async function upsertFolder(req, res) {
         `uploads/${newName}`
       );
       console.log(renameFolderResult);
-      await rename(`uploads/${existingName}`, `uploads/${newName}`, {
-        recursive: true,
-      });
+      // await rename(`uploads/${existingName}`, `uploads/${newName}`, {
+      //   recursive: true,
+      // });
       await prisma.folder.update({
         where: { nameUserId: { name: newName, userId: userData.id } },
         data: {
@@ -241,7 +244,7 @@ async function deleteFolder(req, res) {
       data: { folders: { delete: [{ id: folderData.id }] } },
     });
     await prisma.$disconnect();
-    await rm(`uploads/${folderName}`, { recursive: true, force: true });
+    // await rm(`uploads/${folderName}`, { recursive: true, force: true });
     return res.redirect("/");
   } catch (e) {
     console.error(e);
@@ -273,7 +276,7 @@ async function deleteFile(req, res) {
     console.log(emptyRawResult);
     await prisma.file.delete({ where: { id: Number(req.params.fileId) } });
     await prisma.$disconnect();
-    await unlink(`${fileInfo.location}/${fileInfo.fileData.filename}`);
+    // await unlink(`${fileInfo.location}/${fileInfo.fileData.filename}`);
     return folderName === "root"
       ? res.redirect("/")
       : res.redirect(`/folder/${folderName}`);
