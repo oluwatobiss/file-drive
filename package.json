@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "prisma migrate reset -f",
     "prisma:generate": "prisma generate",
-    "dev": "PORT=3000 node app.js",
+    "dev": "node app.js",
     "start": "node app.js"
   },
   "keywords": [],
