@@ -72,7 +72,6 @@ router.post("/create-folder", controller.upsertFolder);
 router.post("/rename/:folderName", controller.upsertFolder);
 router.post("/delete-folder/:folderName", controller.deleteFolder);
 router.post("/delete-file/:fileId/:folderName", controller.deleteFile);
-router.get("/download/:fileId", controller.downloadFile);
 router.get("/log-out", controller.logUserOut);
 
 module.exports = router;

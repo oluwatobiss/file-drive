@@ -112,11 +112,11 @@ async function saveUploadedFile(req, res) {
       overwrite: true,
       resource_type: "auto",
     };
-    const uploadResult = await cloudinary.uploader.upload(
+    const uploadFileData = await cloudinary.uploader.upload(
       filePath,
       cloudinaryOptions
     );
-    console.log(uploadResult);
+    console.log(uploadFileData);
 
     await rm(req.file.destination, { recursive: true, force: true });
 
@@ -129,12 +129,20 @@ async function saveUploadedFile(req, res) {
             create: {
               name: folderName,
               files: {
-                create: { location: req.file.destination, fileData: req.file },
+                create: {
+                  location: req.file.destination,
+                  fileUrl: uploadFileData.secure_url,
+                  fileData: req.file,
+                },
               },
             },
             update: {
               files: {
-                create: { location: req.file.destination, fileData: req.file },
+                create: {
+                  location: req.file.destination,
+                  fileUrl: uploadFileData.secure_url,
+                  fileData: req.file,
+                },
               },
             },
           },
@@ -280,23 +288,6 @@ async function deleteFile(req, res) {
   }
 }
 
-async function downloadFile(req, res) {
-  try {
-    const fileInfo = await prisma.file.findUnique({
-      where: { id: Number(req.params.fileId) },
-    });
-    await prisma.$disconnect();
-    res.download(
-      `${fileInfo.location}/${fileInfo.fileData.filename}`,
-      fileInfo.fileData.originalname
-    );
-  } catch (e) {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  }
-}
-
 function logUserOut(req, res, next) {
   req.logout((err) => {
     if (err) return next(err);
@@ -314,6 +305,5 @@ module.exports = {
   upsertFolder,
   deleteFolder,
   deleteFile,
-  downloadFile,
   logUserOut,
 };

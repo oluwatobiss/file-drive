@@ -36,6 +36,7 @@ CREATE TABLE "File" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "location" TEXT NOT NULL,
+    "fileUrl" TEXT NOT NULL,
     "fileData" JSONB NOT NULL,
     "folderId" INTEGER,
 
